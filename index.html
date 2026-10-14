@@ -1,0 +1,527 @@
+<!doctype html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Melbourne for Mike, Lucy & Fenna</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;800;900&family=Big+Shoulders+Text:wght@600;700&family=Figtree:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+<style>
+/* Layout: a tram roll-sign masthead, then a sticky filter strip, then category "stops" laid out as ruled card grids; distance badges borrow Australian road-sign colours (green = in town, blue = day trip, brown = overnight tourist route, black = fly). */
+:root{
+  --paper:#F1F4EE; --card:#FAFBF7; --ink:#14261C; --muted:#56685C; --line:#D3DBCF;
+  --gum:#2D6A4C; --gold:#E3A623; --gold-ink:#5A3E00; --tint:#E3EBE0;
+  --roll:#101412; --roll-fg:#F5EFD9; --roll-dim:#8C8A7A;
+  --sign-green:#1D6B44; --sign-blue:#1F4F86; --sign-brown:#6E4426; --sign-black:#202421; --sign-fg:#FFFFFF;
+  --heart:#C2412D;
+  --display:"Big Shoulders Display", "Arial Narrow", "Roboto Condensed", Impact, sans-serif;
+  --label:"Big Shoulders Text", "Arial Narrow", "Roboto Condensed", sans-serif;
+  --body:"Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --paper:#0E1612; --card:#141F19; --ink:#E6ECE3; --muted:#9BAA9F; --line:#26352C;
+  --gum:#66B48A; --gold:#F0B93E; --gold-ink:#F7D894; --tint:#1A2A21;
+  --roll:#070908; --roll-fg:#F5EFD9; --roll-dim:#77756A;
+  --heart:#EE7A63; color-scheme:dark;
+}}
+:root[data-theme="dark"]{
+  --paper:#0E1612; --card:#141F19; --ink:#E6ECE3; --muted:#9BAA9F; --line:#26352C;
+  --gum:#66B48A; --gold:#F0B93E; --gold-ink:#F7D894; --tint:#1A2A21;
+  --roll:#070908; --roll-fg:#F5EFD9; --roll-dim:#77756A;
+  --heart:#EE7A63; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion: reduce){html{scroll-behavior:auto}}
+body{background:var(--paper);color:var(--ink);font-family:var(--body);font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:var(--gum);text-underline-offset:3px}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px, env(safe-area-inset-left, 0px));padding-right:max(16px, env(safe-area-inset-right, 0px))}
+
+/* Masthead */
+.mast{background:var(--roll);color:var(--roll-fg)}
+.mast .wrap{padding-block:clamp(28px,5vw,56px) clamp(28px,4vw,44px);display:grid;gap:22px}
+.route{display:flex;align-items:center;gap:14px;flex-wrap:wrap;font-family:var(--label);font-weight:700;letter-spacing:.12em;text-transform:uppercase;font-size:14px;color:var(--roll-dim)}
+.route .num{font-family:var(--display);font-weight:900;font-size:44px;line-height:1;letter-spacing:0;color:var(--roll);background:var(--gold);padding:4px 12px 2px;border-radius:4px}
+.blind{border:2px solid #2A2E2B;border-radius:6px;background:#000;padding:10px 18px;overflow:hidden;height:calc(clamp(56px,11vw,120px) * 1.02 + 20px);position:relative}
+.blind::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(#000 0,transparent 18%,transparent 82%,#000 100%)}
+.blind ul{list-style:none;margin:0;padding:0;transition:transform .7s cubic-bezier(.65,0,.25,1)}
+.blind li{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:clamp(56px,11vw,120px);line-height:1.02;color:var(--roll-fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media (prefers-reduced-motion: reduce){.blind ul{transition:none}}
+.mast h1{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(30px,5vw,52px);line-height:1.02;text-wrap:balance;max-width:20ch}
+.mast h1 em{font-style:normal;color:var(--gold)}
+.mast p{margin:0;max-width:62ch;color:#D8D3C0;font-size:17px}
+.legend{display:flex;flex-wrap:wrap;gap:10px 18px;font-size:14px;color:#BDB8A6}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+
+/* Badges */
+.sign{display:inline-flex;align-items:center;font-family:var(--label);font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--sign-fg);padding:3px 8px 2px;border-radius:3px;box-shadow:inset 0 0 0 1.5px rgba(255,255,255,.55);white-space:nowrap}
+.sign.town{background:var(--sign-green)} .sign.day{background:var(--sign-blue)} .sign.night{background:var(--sign-brown)} .sign.fly{background:var(--sign-black)}
+
+/* Swear-by strip */
+.swear{padding-block:40px 8px}
+.eyebrow{font-family:var(--label);font-weight:700;letter-spacing:.14em;text-transform:uppercase;font-size:13px;color:var(--muted);margin:0 0 12px}
+.swear-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px}
+.pick{background:var(--gold);color:#1B1300;border-radius:8px;padding:18px 18px 16px;display:grid;gap:8px;align-content:start}
+.pick h3{margin:0;font-family:var(--display);font-weight:800;font-size:26px;line-height:1.05;text-transform:uppercase}
+.pick p{margin:0;font-size:15px;line-height:1.45}
+.pick q{quotes:none}
+
+/* Filter bar */
+.bar{position:sticky;top:env(safe-area-inset-top, 0px);z-index:20;background:color-mix(in srgb, var(--paper) 92%, transparent);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid var(--line);margin-top:28px}
+.bar .wrap{padding-block:12px;display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:600 14px/1 var(--body);color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:9px 13px;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.chip.keen[aria-pressed="true"]{background:var(--heart);border-color:var(--heart);color:#fff}
+.search{flex:1 1 180px;min-width:0;font:500 15px/1 var(--body);color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:999px;padding:10px 14px}
+.jump{display:flex;gap:4px 14px;flex-wrap:wrap;width:100%;font-size:14px}
+.jump a{color:var(--muted);text-decoration:none;font-weight:600}
+.jump a:hover{color:var(--ink)}
+
+/* Sections */
+main{padding-block:12px 40px}
+.stop{padding-top:44px;scroll-margin-top:130px}
+.stop-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;border-bottom:3px solid var(--ink);padding-bottom:8px;margin-bottom:18px}
+.stop-head h2{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(34px,5vw,50px);line-height:1;text-transform:uppercase;text-wrap:balance}
+.stop-head .count{font-family:var(--label);font-weight:700;font-size:15px;color:var(--muted);letter-spacing:.06em}
+.stop-head .blurb{flex-basis:100%;margin:2px 0 0;color:var(--muted);max-width:65ch}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.item{background:var(--card);border:1px solid var(--line);border-radius:8px;padding:16px 16px 14px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.item.is-keen{border-color:var(--heart);box-shadow:inset 0 0 0 1px var(--heart)}
+.item-top{display:flex;gap:10px;align-items:flex-start;justify-content:space-between}
+.item h3{margin:0;font-family:var(--body);font-weight:700;font-size:18px;line-height:1.25;text-wrap:balance;min-width:0}
+.signs{display:flex;gap:6px;flex-wrap:wrap}
+.note{margin:0;font-size:15px;color:var(--ink)}
+.note.ours::before{content:"Nic & Jas: ";font-family:var(--label);font-weight:700;letter-spacing:.06em;text-transform:uppercase;font-size:12px;color:var(--gum)}
+.note.desc{color:var(--muted)}
+.item .more{font-size:14px;font-weight:600;margin-top:auto}
+.heart{flex:none;width:38px;height:38px;border-radius:50%;border:1px solid var(--line);background:var(--paper);display:grid;place-items:center;cursor:pointer;color:var(--muted)}
+.heart svg{width:18px;height:18px}
+.heart[aria-pressed="true"]{background:var(--heart);border-color:var(--heart);color:#fff}
+.empty{color:var(--muted);font-style:italic;padding:8px 0}
+
+/* Food */
+.food{background:var(--tint);margin-top:56px}
+.food .wrap{padding-block:44px 52px}
+.food .stop{padding-top:0}
+.musts{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:28px}
+.must{border:2px solid var(--ink);border-radius:8px;padding:12px 14px;display:grid;gap:4px;background:var(--card)}
+.must b{font-family:var(--display);font-weight:800;font-size:22px;line-height:1.05;text-transform:uppercase}
+.must span{font-size:14px;color:var(--muted);line-height:1.4}
+.menu{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:28px 36px}
+.menu h3{margin:0 0 6px;font-family:var(--label);font-weight:700;letter-spacing:.1em;text-transform:uppercase;font-size:15px;color:var(--gum)}
+.menu ul{list-style:none;margin:0;padding:0}
+.menu li{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px dashed var(--line)}
+.menu li > div{min-width:0;flex:1}
+.menu li b{display:block;font-weight:700}
+.menu li span{display:block;font-size:14px;color:var(--muted);line-height:1.4}
+.menu .heart{width:32px;height:32px}
+.menu .heart svg{width:15px;height:15px}
+
+/* Shortlist */
+.shortlist{padding-block:48px 64px}
+.sl-box{background:var(--roll);color:var(--roll-fg);border-radius:10px;padding:clamp(20px,4vw,36px);display:grid;gap:16px}
+.sl-box h2{margin:0;font-family:var(--display);font-weight:800;font-size:clamp(32px,5vw,46px);line-height:1;text-transform:uppercase}
+.sl-box p{margin:0;color:#CFCAB7;max-width:60ch}
+.sl-list{margin:0;padding:0;list-style:none;display:flex;flex-wrap:wrap;gap:8px}
+.sl-list li{background:#1E2420;border:1px solid #333A35;border-radius:999px;padding:6px 12px;font-size:14px}
+.sl-actions{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{font:700 15px/1 var(--body);border-radius:999px;padding:12px 18px;cursor:pointer;border:0;background:var(--gold);color:#1B1300}
+.btn.ghost{background:transparent;color:var(--roll-fg);border:1px solid #4A514C}
+.sl-text{width:100%;min-height:120px;font:14px/1.5 var(--body);background:#000;color:var(--roll-fg);border:1px solid #333A35;border-radius:6px;padding:10px}
+.status{font-size:14px;color:var(--gold)}
+footer{color:var(--muted);font-size:14px;padding-block:0 40px}
+
+/* Phone pass */
+.swipe{scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.swipe::-webkit-scrollbar{display:none}
+@media (max-width: 640px){
+  body{font-size:15px}
+  .mast .wrap{padding-block:20px 22px;gap:14px}
+  .route{font-size:12px;gap:10px}
+  .route .num{font-size:32px;padding:3px 9px 1px}
+  .blind{padding:6px 12px;height:calc(44px * 1.02 + 12px)}
+  .blind li{font-size:44px}
+  .mast h1{font-size:30px}
+  .mast p{font-size:15px}
+  .legend{gap:8px 12px;font-size:13px}
+  .legend span{gap:6px}
+
+  .swear{padding-block:28px 0}
+  .swear-grid{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;gap:10px;margin-inline:calc(-1 * max(16px, env(safe-area-inset-left, 0px)));padding-inline:max(16px, env(safe-area-inset-left, 0px));padding-bottom:4px}
+  .pick{flex:0 0 72%;scroll-snap-align:start;padding:14px 14px 12px}
+  .pick h3{font-size:22px}
+  .pick p{font-size:14px}
+
+  .bar{margin-top:20px}
+  .bar .wrap{padding-block:8px;gap:8px;flex-direction:column;align-items:stretch}
+  .chips{flex-wrap:nowrap;overflow-x:auto;min-width:0;margin-inline:calc(-1 * max(16px, env(safe-area-inset-left, 0px)));padding-inline:max(16px, env(safe-area-inset-left, 0px))}
+  .chip{flex:none;padding:8px 12px;font-size:13px}
+  .search{flex:none;width:100%;padding:9px 13px;font-size:16px}
+  .jump{flex-wrap:nowrap;overflow-x:auto;white-space:nowrap;gap:16px;font-size:13px;min-width:0;margin-inline:calc(-1 * max(16px, env(safe-area-inset-left, 0px)));padding-inline:max(16px, env(safe-area-inset-left, 0px))}
+
+  .stop{padding-top:32px;scroll-margin-top:150px}
+  .stop-head{margin-bottom:14px}
+  .stop-head h2{font-size:32px}
+  .grid{gap:10px}
+  .item{padding:14px 14px 12px}
+  .item h3{font-size:17px}
+  .food{margin-top:40px}
+  .food .wrap{padding-block:32px 40px}
+  .musts{grid-template-columns:1fr 1fr;gap:8px}
+  .must b{font-size:19px}
+  .shortlist{padding-block:36px 48px}
+}
+</style>
+</head>
+<body>
+
+
+<header class="mast">
+  <div class="wrap">
+    <div class="route"><span class="num">81</span><span>ideas · all stops · from Preston</span></div>
+    <div class="blind" aria-hidden="true"><ul id="roll"></ul></div>
+    <h1>Melbourne for <em>Mike, Lucy &amp; Fenna</em></h1>
+    <p>Everything Nic and Jas like, rate, or reckon you might, pulled into one place. Filter by how far you fancy going, tap the heart on anything you're keen on, then send us your shortlist from the bottom of the page.</p>
+    <div class="legend">
+      <span><i class="sign town">In town</i> Melbourne &amp; suburbs</span>
+      <span><i class="sign day">Day trip</i> back for dinner</span>
+      <span><i class="sign night">Overnight</i> brown, like the tourist signs</span>
+      <span><i class="sign fly">Fly</i> interstate</span>
+    </div>
+  </div>
+</header>
+
+<section class="wrap swear" aria-labelledby="swear-h">
+  <p class="eyebrow" id="swear-h">The ones we swear by</p>
+  <div class="swear-grid swipe" id="swear"></div>
+</section>
+
+<nav class="bar" aria-label="Filters">
+  <div class="wrap">
+    <div class="chips swipe" role="group" aria-label="Distance">
+      <button class="chip" type="button" id="f-all" data-range="all" aria-pressed="true">Everything</button>
+      <button class="chip" type="button" id="f-town" data-range="town" aria-pressed="false">In town</button>
+      <button class="chip" type="button" id="f-day" data-range="day" aria-pressed="false">Day trip</button>
+      <button class="chip" type="button" id="f-night" data-range="night" aria-pressed="false">Overnight</button>
+      <button class="chip" type="button" id="f-fly" data-range="fly" aria-pressed="false">Fly</button>
+      <button class="chip keen" type="button" id="f-keen" aria-pressed="false">♥ Keen only</button>
+    </div>
+    <input class="search" id="q" type="search" placeholder="Search: penguins, burgers, gold…" aria-label="Search ideas">
+    <div class="jump swipe" id="jump"></div>
+  </div>
+</nav>
+
+<main class="wrap" id="sections"></main>
+
+<section class="food" id="eat" aria-labelledby="eat-h">
+  <div class="wrap">
+    <div class="stop">
+      <div class="stop-head">
+        <h2 id="eat-h">Eat &amp; drink</h2><span class="count" id="food-count"></span>
+        <p class="blurb">Asian food here is a few tiers up from what you get in the UK, with loads of options from loads of cultures. Big Italian and Greek communities too, so the pasta's serious.</p>
+      </div>
+      <p class="eyebrow">Eat at least once</p>
+      <div class="musts" id="musts"></div>
+      <div class="menu" id="menu"></div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap shortlist" aria-labelledby="sl-h">
+  <div class="sl-box">
+    <h2 id="sl-h">Your shortlist</h2>
+    <p id="sl-help">Nothing hearted yet. Tap the heart on any idea or food spot and it'll land here.</p>
+    <ul class="sl-list" id="sl-list"></ul>
+    <div class="sl-actions">
+      <button class="btn" type="button" id="copy">Copy list to send us</button>
+      <button class="btn ghost" type="button" id="clear">Clear hearts</button>
+      <span class="status" id="status" role="status"></span>
+    </div>
+    <textarea class="sl-text" id="sl-text" aria-label="Shortlist text" hidden readonly></textarea>
+  </div>
+</section>
+
+<footer class="wrap">Made by Nic &amp; Jas for Mike, Lucy &amp; Fenna. Hearts are saved on this device only.</footer>
+
+<script>
+const HEART = '<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 21s-7.5-4.6-9.6-9.2C1 8.6 2.9 5 6.4 5c2.1 0 3.5 1.2 4.3 2.4h2.6C14.1 6.2 15.5 5 17.6 5 21.1 5 23 8.6 21.6 11.8 19.5 16.4 12 21 12 21z"/></svg>';
+const RANGE = {town:"In town", day:"Day trip", night:"Overnight", fly:"Fly"};
+
+const CATS = [
+  {id:"wild", name:"Critters", blurb:"Koalas are tricky to spot in the wild, so the sanctuaries are the move. Fruit bats you'll see from our back garden for free."},
+  {id:"city", name:"Around the city", blurb:"The CBD, the gardens, the inner suburbs. All doable on the tram."},
+  {id:"culture", name:"Museums & exhibitions", blurb:"History, art and the moving image, mostly within a short walk of each other."},
+  {id:"nights", name:"Nights out & games", blurb:"Gigs, comedy, cinemas, bowling of both kinds, and a lot of breweries."},
+  {id:"sport", name:"Sport", blurb:"Melbourne will watch anything with a ball in it."},
+  {id:"outdoors", name:"Outdoors & water", blurb:"Beaches, rivers, gorges and a hot air balloon. Weather permitting, it's an outdoors city."},
+  {id:"trips", name:"Road trips", blurb:"Victoria rewards a car. Some of these are easy day trips, the best ones want a night or two."},
+  {id:"odd", name:"Odds & ends", blurb:"Things that didn't fit anywhere else."}
+];
+
+const ITEMS = [
+  {id:1,c:"wild",t:"Koalas",r:["day"],n:"Fairly tricky to see in the wild, but there are some good sanctuary-type places which feel a bit better than a zoo."},
+  {id:2,c:"city",t:"Melbourne walking tour",r:["town"],n:"Probably the CBD. Jas and Michael did this and said it was good."},
+  {id:3,c:"wild",t:"Wildlife sanctuaries",r:["day"],n:"There are some cute ones in Ballarat and Healesville. If you wanna feed a kangaroo, it's Ballarat."},
+  {id:4,c:"wild",t:"Fairy penguins",r:["town","day"],n:"Either the official Penguin Parade on Phillip Island, or we could try St Kilda (never tried this option)."},
+  {id:5,c:"nights",t:"Breweries",r:["town"],n:"You're never too far from a brewery. La Sirène is cool."},
+  {id:6,c:"trips",t:"Wineries",r:["day"],n:"Heathcote (incl. a Tooborac pies stop), Yarra Valley (incl. the chocolate factory?) or Mornington. Heathcote will have the most reds."},
+  {id:7,c:"city",t:"Botanic Gardens & Shrine of Remembrance",r:["town"],n:"Check out the free guided walk: 10:30am Tue–Sun, 1:30pm Sat & Sun. Definitely recommend, it's a beautiful spot. Hit up the Shrine at the same time.",star:"A beautiful spot, and the guided walk is free."},
+  {id:8,c:"nights",t:"Cinemas with character",r:["town"],n:"Pentridge? Astor? Sun? Thornbury Picture House? Coburg Drive-In? IMAX? Nova?"},
+  {id:9,c:"city",t:"St Kilda",r:["town"],n:"Sort of like a British seaside place. Bit of a young British/Irish backpacker spot."},
+  {id:10,c:"nights",t:"Arcades",r:["town"],n:"Archie Brothers, Timezone or Fortress Melbourne (we haven't been to this one but it could be good)."},
+  {id:11,c:"city",t:"Crown Casino",r:["town"],n:"Not Vegas, but it's pretty glitzy if you wanna pretend you're James Bond."},
+  {id:12,c:"city",t:"Melbourne Star wheel",r:["town"],n:"This is funny because people in Melbourne hate it for some reason. We haven't done it and don't know anyone who has 😄"},
+  {id:13,c:"outdoors",t:"Camping",r:["night"],n:"On a sliding scale from \"in the bush, BYO water, poo in a hole\" to \"caravan park in a cute town\"."},
+  {id:14,c:"outdoors",t:"Hiking",r:["day"],n:"Long, short, medium, high, low, nearby, far-by."},
+  {id:15,c:"nights",t:"Bowling at The Keys",r:["town"],n:"In Preston near us. I think the cheeseburgers here are good.",link:["https://www.thekeys.com.au/","The Keys"]},
+  {id:16,c:"city",t:"Old Melbourne Gaol",r:["town"],n:"A look at the old prison where they hanged Ned Kelly. Daytime, or ghost-tour style."},
+  {id:17,c:"nights",t:"Rooftop bars",r:["town"],d:"Melbourne loves a rooftop. Naked for Satan in Fitzroy is on the food list too."},
+  {id:18,c:"city",t:"Skydeck",r:["town"],n:"Tourist observation tower thing. A very tall building in the CBD where you get a view."},
+  {id:19,c:"sport",t:"MCG tour",r:["town"],n:"The world-famous Melbourne Cricket Ground. If there's no event on while you're here, they do tours."},
+  {id:20,c:"sport",t:"A-League soccer",r:["town"],n:"Quality is like watching League One imo 😂"},
+  {id:21,c:"nights",t:"Gigs & live music",r:["town"],n:"Heaps of quirky venues, big and small. Beat has a good gig guide.",link:["https://beat.com.au/gig-guide/","Beat gig guide"]},
+  {id:22,c:"trips",t:"Great Ocean Road",r:["night"],n:"A tourist classic. A road trip where you'd probably want to stop at least one night."},
+  {id:23,c:"trips",t:"Old-school Aussie towns",r:["day"],n:"Australiana in town form. We might end up driving through these as part of another trip."},
+  {id:24,c:"outdoors",t:"Hot springs",r:["day"],n:"There are two geothermal hot springs places on the Mornington Peninsula. If hot springs are your thing, you'll love these."},
+  {id:25,c:"outdoors",t:"Beach",r:["town"],n:"We'll have to see what the weather's doing, but there are obviously tons of beaches. Water will be cold but the sun is hopefully hot."},
+  {id:26,c:"outdoors",t:"Disc golf",r:["town"],n:"I've only played once while we've been here, at a caravan park at Lake Eppalock. There must be some decent courses about but I've never looked into it."},
+  {id:27,c:"outdoors",t:"Ferry across the bay",r:["day"],n:"Jas's parents liked this. You get a good view of the city. Goes from Docklands to Portarlington."},
+  {id:28,c:"culture",t:"First Peoples at Bunjilaka",r:["town"],n:"The history of this country before white people came and stole it.",link:["https://museumsvictoria.com.au/bunjilaka/about-us/first-peoples/","Museums Victoria"]},
+  {id:29,c:"culture",t:"Making Good: Redesigning the Everyday",r:["town"],n:"This exhibition looks good, at the National Gallery (NGV)."},
+  {id:30,c:"culture",t:"Yarra: Stories of Melbourne's River",r:["town"],n:"Some more Melbourne history. This one is at the Old Treasury Building."},
+  {id:31,c:"culture",t:"The Story of the Moving Image",r:["town"],n:"This looks like a cool exhibition too, at ACMI, the moving image museum.",link:["https://www.acmi.net.au/whats-on/story-of-the-moving-image-exhibition/","ACMI"]},
+  {id:32,c:"nights",t:"Stand-up comedy",r:["town"],n:"There's a proper stand-up scene with plenty of spots to watch it, incl. The Comics Lounge."},
+  {id:33,c:"trips",t:"Halls Gap",r:["night"],n:"Long drive, but a cool countryside spot with mountains and camping and stuff."},
+  {id:34,c:"outdoors",t:"Hot air balloon over the city",r:["town"],n:"Did this for my birthday and it was amazing. Not cheap but bloody magical. Early start too ☺️",star:"Not cheap, but bloody magical. Early start."},
+  {id:35,c:"city",t:"State Library tour",r:["town"],n:"Apparently very beautiful inside, voted best library in the Southern Hemisphere or something 😀 Free too."},
+  {id:36,c:"nights",t:"Barefoot bowls",r:["town"],n:"Bowls like old people play in the UK, but here it's a young person's thing with beers and BBQs. There are bowls clubs everywhere."},
+  {id:37,c:"trips",t:"Bright",r:["night"],n:"Long drive, so we'd wanna stop a night at least. Countryside up into what they call the \"high country\". Quaint town, and the camping is good."},
+  {id:38,c:"wild",t:"Bat viewing platform, Kew",r:["town"],n:"There are tons of fruit bats around. We'll see some near the house, but this is where you go to see hundreds of them fly off at dusk, Batcave style."},
+  {id:39,c:"trips",t:"Wilsons Prom",r:["night"],n:"Long drive, definitely stop at least a night. Bloody beautiful scenery, and you'll very likely see wombats. Camping or cabins, on the beach.",star:"Bloody beautiful, and very likely wombats."},
+  {id:40,c:"city",t:"Wander the inner suburbs",r:["town"],n:"Fitzroy, Brunswick, Collingwood, Preston, Thornbury, Northcote and more. They've all got cool high streets with stuff going on. Brunswick and Fitzroy are particularly cool imo."},
+  {id:41,c:"trips",t:"Walhalla",r:["day"],n:"Old gold-mining town that's now a living museum. The gold mine tour is good, and apparently the night-time ghost tours are great too. Medium drive, a day trip at a push."},
+  {id:43,c:"outdoors",t:"BBQ in the park",r:["town"],n:"Make meat hot and eat it. Heaps of free electric BBQs in public parks."},
+  {id:44,c:"city",t:"Chinatown",r:["town"],n:"In the CBD, and very likely part of a walking tour. Some good dumpling restaurants if you're keen on eating piles of dumplings 🤤"},
+  {id:45,c:"trips",t:"Echuca",r:["day"],n:"Once the busiest inland port in Australia, up on the Murray River. You can take a paddle steamer, and it's a cute town."},
+  {id:46,c:"trips",t:"Sovereign Hill",r:["day"],n:"Old gold-mining village and living museum with actors, shows and demonstrations. Every Melburnian remembers it from a school trip. Jas and I did it and loved it. Near Ballarat.",star:"Gold-rush village with actors and shows. We loved it."},
+  {id:47,c:"odd",t:"Melbourne Boat Show",r:["town"],n:"The annual boat show 😂 I've never been, it just sounded funny.",link:["https://www.biavic.com.au/2025-melbourne-boat-show-exhibitor-hub","Boat show site"]},
+  {id:48,c:"trips",t:"Ned Kelly experience, Glenrowan",r:["night"],n:"If for some reason you're into Ned Kelly, this is the experience for you. Long drive, so best as part of another trip.",link:["https://www.kellylandglenrowan.com/","Kellyland"]},
+  {id:49,c:"trips",t:"Arthurs Seat",r:["day"],n:"A big hill on the Mornington Peninsula that you can go up on a cable car."},
+  {id:50,c:"trips",t:"Otways rainforest",r:["night"],n:"Small patches of what they call rainforest down on the Ocean Road near Apollo Bay. Very different to the usual dry scenery 😀"},
+  {id:51,c:"odd",t:"Flower arranging course",r:["town"],d:"A hands-on workshop where you take the bunch home."},
+  {id:52,c:"wild",t:"Australia Zoo",r:["fly"],d:"The Irwin family's zoo, up in Queensland. Only on a bigger trip."},
+  {id:53,c:"city",t:"Royal Exhibition Building tour",r:["town"],d:"World Heritage-listed hall in Carlton Gardens, right next to Melbourne Museum."},
+  {id:54,c:"outdoors",t:"Boat hire on the Yarra",r:["town"],d:"Hire a little boat, bring snacks, and potter along the river through the city."},
+  {id:55,c:"odd",t:"Sea Shepherd ship Steve Irwin",r:["town"],d:"The conservation ship named after the Crocodile Hunter."},
+  {id:56,c:"outdoors",t:"Kayaking on the Yarra",r:["town"],d:"Paddle through the city and under the bridges."},
+  {id:57,c:"outdoors",t:"Williamstown beach",r:["town"],d:"Old port village across the bay with a beach, fish and chips, and skyline views."},
+  {id:58,c:"nights",t:"World's largest true 1.43:1 IMAX screen",r:["town"],d:"Full-height IMAX at Melbourne Museum in Carlton. Worth it for anything shot for the format."},
+  {id:59,c:"trips",t:"Lakes Entrance",r:["night"],d:"East Gippsland seaside town where the lakes meet the ocean. A long drive, so an overnighter."},
+  {id:60,c:"nights",t:"Pinball museum, Campbellfield",r:["town"],d:"Rows of playable pinball machines."},
+  {id:61,c:"nights",t:"Moonlight & rooftop cinema",r:["town"],d:"Films outdoors, on a lawn or up on a roof, in the warmer months."},
+  {id:62,c:"trips",t:"Puffing Billy",r:["day"],d:"Century-old steam train through the Dandenong Ranges forest. Sit with your legs out the window."},
+  {id:63,c:"odd",t:"Diamond Valley Railway",r:["town"],d:"Miniature ride-on railway in Eltham."},
+  {id:64,c:"sport",t:"Cricket",r:["town"],d:"The summer sport. A day at the MCG, or a local game with a beer."},
+  {id:65,c:"sport",t:"Wrestling",r:["town"],d:"Local pro wrestling shows. Loud and silly."},
+  {id:66,c:"sport",t:"Rodeo",r:["day"],d:"Country rodeos pop up around regional Victoria."},
+  {id:67,c:"trips",t:"Gold Coast theme parks",r:["fly"],d:"Queensland, so a flight. Rollercoasters and sun."},
+  {id:68,c:"outdoors",t:"Rail trails",r:["day"],d:"Old railway lines turned into bike paths through the countryside."},
+  {id:69,c:"outdoors",t:"Werribee Gorge walk & swim",r:["day"],d:"Rocky gorge walk west of the city, with a river swim along the way."},
+  {id:70,c:"outdoors",t:"Organ Pipes",r:["day"],d:"Tall basalt columns in a small national park, about half an hour north-west of the city."},
+  {id:71,c:"wild",t:"Living Legends",r:["town"],d:"Retirement home for champion racehorses, out near the airport. You can meet them."},
+  {id:73,c:"wild",t:"Collingwood Children's Farm",r:["town"],d:"A working farm on the river in Abbotsford, ten minutes from the CBD."},
+  {id:74,c:"city",t:"Feminist walking tour",r:["town"],d:"A CBD walk through the women who shaped Melbourne."},
+  {id:75,c:"trips",t:"Lake Eildon",r:["night"],d:"A big lake in the hills, known for houseboats."},
+  {id:76,c:"trips",t:"Lake Eppalock",r:["night"],d:"Lake near Heathcote with a caravan park, where Nic played his one round of disc golf."},
+  {id:77,c:"trips",t:"Adelaide",r:["fly"],d:"South Australia's capital. Fly, or make a long road trip of it."},
+  {id:78,c:"sport",t:"Basketball",r:["town"],d:"NBL games are fast and loud, and Melbourne has two teams."},
+  {id:79,c:"culture",t:"Melbourne Museum",r:["town"],n:"The Young Kings section is meant to be awesome. We have free passes to this."},
+  {id:80,c:"nights",t:"Zero Latency",r:["town"],d:"Free-roam VR: you run around a big warehouse space with a headset on."},
+  {id:81,c:"trips",t:"Daylesford",r:["day"],d:"Spa town about 90 minutes out, with mineral springs, cafes and a lake."}
+];
+
+const MUSTS = [
+  {id:"m1",t:"Chicken parma",s:"The pub classic. Every pub has one."},
+  {id:"m2",t:"HSP",s:"Halal snack pack: chips, kebab meat, three sauces."},
+  {id:"m3",t:"Kangaroo",s:"Maybe you haven't tried it yet."},
+  {id:"m4",t:"Aussie oysters",s:"Fresh, briny, cheap-ish."},
+  {id:"m5",t:"Dumplings",s:"Piles of them, in Chinatown."},
+  {id:"m6",t:"Korean BBQ",s:"Grill your own meat. Some do all-you-can-eat for two hours."}
+];
+
+const MENU = [
+  {h:"Bakeries & sweet stuff", items:[
+    {id:"f1",t:"Luther's",s:"Best ice cream Nic has ever eaten. The rest of Melbourne agrees."},
+    {id:"f2",t:"Lune Croissanterie",s:"The famous croissants."},
+    {id:"f3",t:"Calle",s:"One of many excellent bakeries."},
+    {id:"f4",t:"A1 Bakery",s:"Lebanese bakery."},
+    {id:"f5",t:"Pancake Parlour",s:""}
+  ]},
+  {h:"Burgers & pizza", items:[
+    {id:"f6",t:"Juanita Peaches",s:"Burgers and donuts 🤤"},
+    {id:"f7",t:"Easey's, Collingwood",s:"Burgers."},
+    {id:"f8",t:"The Keys",s:"Smash burgers, or go hunting for Melbourne's best."},
+    {id:"f9",t:"Deep Pan Pizza",s:"Chicago deep dish. Bangin'."},
+    {id:"f10",t:"Next Door Pizza",s:"Just great regular pizza."}
+  ]},
+  {h:"Asian", items:[
+    {id:"f11",t:"My Tho, Preston",s:"Pho from the Asian shops in Preston."},
+    {id:"f12",t:"Ramen Gogyo",s:""},
+    {id:"f13",t:"Sushi Hotaru",s:""},
+    {id:"f14",t:"Jas's secret Chinatown sushi spot",s:"Ask her."},
+    {id:"f15",t:"Serai",s:"Filipino place that folks rave about. CBD."},
+    {id:"f16",t:"Maharaja",s:"The good Indian place we found that's like the UK."}
+  ]},
+  {h:"Everything else", items:[
+    {id:"f17",t:"Very Good Falafel",s:""},
+    {id:"f18",t:"Tonda",s:"Italian."},
+    {id:"f19",t:"Leonard's Street Deli",s:""},
+    {id:"f20",t:"Patsy's",s:"Vegetarian restaurant."},
+    {id:"f21",t:"Naked for Satan",s:"Fitzroy bar with a rooftop."},
+    {id:"f22",t:"Barry's Garage",s:""},
+    {id:"f23",t:"Preston Market",s:"Food stalls."},
+    {id:"f24",t:"Lamana supermarket",s:""}
+  ]}
+];
+
+const ROLL = ["St Kilda","Wilsons Prom","Chinatown","Sovereign Hill","Great Ocean Rd","Phillip Island","Fitzroy","Halls Gap","Bright","Preston"];
+
+/* State */
+const KEY = "mlf-keen-v1";
+let keen = new Set();
+try { keen = new Set(JSON.parse(localStorage.getItem(KEY) || "[]")); } catch(e) {}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify([...keen])); } catch(e) {} };
+let range = "all", keenOnly = false, query = "";
+
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const heartBtn = (id, title) => `<button class="heart" type="button" data-heart="${id}" aria-pressed="${keen.has(String(id))}" aria-label="Keen on ${esc(title)}">${HEART}</button>`;
+
+/* Roll sign */
+const roll = document.getElementById("roll");
+roll.innerHTML = ROLL.map(r => `<li>${esc(r)}</li>`).join("") + `<li>${esc(ROLL[0])}</li>`;
+let ri = 0;
+const motionOK = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+if (motionOK) setInterval(() => {
+  ri++;
+  const h = roll.firstElementChild.getBoundingClientRect().height;
+  roll.style.transition = "";
+  roll.style.transform = `translateY(${-ri*h}px)`;
+  if (ri === ROLL.length) setTimeout(() => { roll.style.transition = "none"; roll.style.transform = "translateY(0)"; ri = 0; }, 750);
+}, 2600);
+
+/* Swear-by strip */
+const swearItems = ITEMS.filter(i => i.star);
+const swear = document.getElementById("swear");
+swear.innerHTML = swearItems.map(i => `<div class="pick"><h3>${esc(i.t)}</h3><p>${esc(i.star)}</p></div>`).join("") +
+  `<div class="pick"><h3>Luther's ice cream</h3><p>The best ice cream Nic has ever eaten.</p></div>`;
+
+/* Sections */
+const sections = document.getElementById("sections");
+const jump = document.getElementById("jump");
+jump.innerHTML = CATS.map(c => `<a href="#${c.id}">${esc(c.name)}</a>`).join("") + `<a href="#eat">Eat &amp; drink</a><a href="#sl-h">Shortlist</a>`;
+
+function card(i){
+  const note = i.n ? `<p class="note ours">${esc(i.n)}</p>` : `<p class="note desc">${esc(i.d)}</p>`;
+  const link = i.link ? `<a class="more" href="${i.link[0]}" target="_blank" rel="noopener">${esc(i.link[1])} ↗</a>` : "";
+  return `<article class="item${keen.has(String(i.id)) ? " is-keen" : ""}" data-id="${i.id}">
+    <div class="item-top"><h3>${esc(i.t)}</h3>${heartBtn(i.id, i.t)}</div>
+    <div class="signs">${i.r.map(r => `<span class="sign ${r}">${RANGE[r]}</span>`).join("")}</div>
+    ${note}${link}</article>`;
+}
+
+function render(){
+  const q = query.trim().toLowerCase();
+  sections.innerHTML = CATS.map(c => {
+    const all = ITEMS.filter(i => i.c === c.id);
+    const shown = all.filter(i =>
+      (range === "all" || i.r.includes(range)) &&
+      (!keenOnly || keen.has(String(i.id))) &&
+      (!q || (i.t + " " + (i.n || "") + " " + (i.d || "")).toLowerCase().includes(q)));
+    const filtered = shown.length !== all.length;
+    return `<section class="stop" id="${c.id}">
+      <div class="stop-head"><h2>${esc(c.name)}</h2><span class="count">${filtered ? shown.length + " of " + all.length : all.length + " ideas"}</span><p class="blurb">${esc(c.blurb)}</p></div>
+      ${shown.length ? `<div class="grid">${shown.map(card).join("")}</div>` : `<p class="empty">Nothing here matches. Try another filter.</p>`}
+    </section>`;
+  }).join("");
+  renderFood();
+  renderShortlist();
+}
+
+function renderFood(){
+  const q = query.trim().toLowerCase();
+  const match = (t, s) => (!keenOnly || keen.has(t.id)) && (!q || (t.t + " " + t.s).toLowerCase().includes(q));
+  const musts = MUSTS.filter(m => match(m, m));
+  document.getElementById("musts").innerHTML = musts.map(m =>
+    `<div class="must"><div style="display:flex;justify-content:space-between;gap:8px;align-items:flex-start"><b>${esc(m.t)}</b>${heartBtn(m.id, m.t).replace('class="heart"','class="heart" style="width:32px;height:32px"')}</div><span>${esc(m.s)}</span></div>`).join("") || `<p class="empty">Nothing here matches.</p>`;
+  document.getElementById("menu").innerHTML = MENU.map(g => {
+    const items = g.items.filter(it => match(it));
+    if (!items.length) return "";
+    return `<div><h3>${esc(g.h)}</h3><ul>${items.map(it => `<li><div><b>${esc(it.t)}</b>${it.s ? `<span>${esc(it.s)}</span>` : ""}</div>${heartBtn(it.id, it.t)}</li>`).join("")}</ul></div>`;
+  }).join("");
+  const total = MUSTS.length + MENU.reduce((a, g) => a + g.items.length, 0);
+  document.getElementById("food-count").textContent = total + " things to eat";
+}
+
+function nameFor(id){
+  const i = ITEMS.find(x => String(x.id) === id); if (i) return i.t;
+  const m = MUSTS.find(x => x.id === id); if (m) return m.t;
+  for (const g of MENU) { const f = g.items.find(x => x.id === id); if (f) return f.t; }
+  return null;
+}
+
+function renderShortlist(){
+  const names = [...keen].map(nameFor).filter(Boolean);
+  document.getElementById("sl-list").innerHTML = names.map(n => `<li>${esc(n)}</li>`).join("");
+  document.getElementById("sl-help").textContent = names.length
+    ? `${names.length} hearted. Copy the list and send it over, and we'll start planning.`
+    : "Nothing hearted yet. Tap the heart on any idea or food spot and it'll land here.";
+  document.getElementById("copy").disabled = !names.length;
+}
+
+/* Events */
+document.addEventListener("click", e => {
+  const h = e.target.closest("[data-heart]");
+  if (h) {
+    const id = String(h.dataset.heart);
+    keen.has(id) ? keen.delete(id) : keen.add(id);
+    save();
+    const on = keen.has(id);
+    document.querySelectorAll(`[data-heart="${CSS.escape(id)}"]`).forEach(b => b.setAttribute("aria-pressed", on));
+    const art = h.closest(".item"); if (art) art.classList.toggle("is-keen", on);
+    if (keenOnly) render(); else renderShortlist();
+  }
+});
+document.querySelectorAll("[data-range]").forEach(b => b.addEventListener("click", () => {
+  range = b.dataset.range;
+  document.querySelectorAll("[data-range]").forEach(x => x.setAttribute("aria-pressed", x === b));
+  render();
+}));
+document.getElementById("f-keen").addEventListener("click", e => {
+  keenOnly = !keenOnly; e.currentTarget.setAttribute("aria-pressed", keenOnly); render();
+});
+document.getElementById("q").addEventListener("input", e => { query = e.target.value; render(); });
+
+const status = document.getElementById("status");
+document.getElementById("copy").addEventListener("click", () => {
+  const names = [...keen].map(nameFor).filter(Boolean);
+  const text = "Our Melbourne shortlist:\n" + names.map(n => "- " + n).join("\n");
+  const ta = document.getElementById("sl-text");
+  const fallback = () => { ta.value = text; ta.hidden = false; ta.focus(); ta.select(); status.textContent = "Select and copy the text below."; };
+  try {
+    navigator.clipboard.writeText(text).then(() => { status.textContent = "Copied. Paste it into a message to Nic or Jas."; }, fallback);
+  } catch(err) { fallback(); }
+});
+document.getElementById("clear").addEventListener("click", () => {
+  keen.clear(); save(); status.textContent = "Hearts cleared."; render();
+});
+
+render();
+</script>
+
+</body>
+</html>
